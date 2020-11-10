@@ -7,7 +7,7 @@ pool:
   vmImage: 'windows-latest'
 
 jobs:
-  - job: CdTestingForOIDCProviderNest
+  - job: CdForOIDCProviderNest
     steps:
       - task: InstallSSHKey@0
         inputs:
@@ -27,6 +27,29 @@ jobs:
       - script: npm install -g @angular/cli
         displayName: NPM Install Angular CLI
 
+      - task: DownloadSecureFile@1
+        name: ormConfig
+        displayName: 'Download ormconfig.ts'
+        inputs:
+          secureFile: 'ormconfig.ts'
+      - task: CopyFiles@2
+        displayName: 'Copy ormconfig'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)
+          Contents: ormconfig.ts
+          TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
+      - task: DownloadSecureFile@1
+        name: oidcproviderconfig
+        displayName: 'Download ormconfig.ts'
+        inputs:
+          secureFile: 'oidc-provider-config.ts'
+      - task: CopyFiles@2
+        displayName: 'Copy ormconfig'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)
+          Contents: oidc-provider-config.ts
+          TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
+
       - script: |
           ng build --project aggiemap-angular --prod
         displayName: 'Build Aggiemap'
@@ -44,14 +67,4 @@ jobs:
         displayName: 'Publish Artifacts'
 
 
-      - task: DownloadSecureFile@1
-        name: ormConfig
-        displayName: 'Download ormconfig.ts'
-        inputs:
-          secureFile: 'ormconfig.ts'
-      - task: CopyFiles@2
-        displayName: 'Copy ormconfig'
-        inputs:
-          SourceFolder: $(Agent.TempDirectory)
-          Contents: ormconfig.ts
-          TargetFolder: $(System.DefaultWorkingDirectory)/libs/covid/data-api/src/lib
+
