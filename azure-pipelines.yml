@@ -1,32 +1,13 @@
-# Node.js with Angular
-# Build a Node.js project that uses Angular.
+# Node.js
+# Build a general Node.js project with npm.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 pool:
   vmImage: 'windows-latest'
 
-resources:
-  containers:
-    - container: mssql
-      image: mcr.microsoft.com/mssql/server:2019-latest
-      ports: 
-      - 1433:1433
-      env:
-        ACCEPT_EULA: Y
-        SA_PASSWORD: yourStrong(!)Password
-        MSSQL_PID: Developer 
-      options: --name mssql
-
 jobs:
-  - job: ci
-    timeoutInMinutes: 120
-    services:
-      mssql: mssql
-    pool:
-      vmImage: 'ubuntu-latest'
-    variables:
-      IS_PR: $[ eq(variables['Build.Reason'], 'PullRequest') ]
+  - job: CdTestingForOIDCProviderNest
     steps:
       - task: InstallSSHKey@0
         inputs:
@@ -34,35 +15,35 @@ jobs:
           sshKeySecureFile: 'id_rsa'
       - task: NodeTool@0
         inputs:
-          versionSpec: '12.16.2'
+          versionSpec: '12.18'
         displayName: 'Install Node.js'
-      - task: PowerShell@2
-        displayName: 'delay 10'
+      - task: Cache@2
         inputs:
-          targetType: 'inline'
-          script: |
-            # Write your PowerShell commands here.
-              start-sleep -s 10
-      - task: CmdLine@2
-        displayName: 'docker logs'
+          key: 'npm | "$(Agent.OS)" | package-lock.json'
+          restoreKeys: 'npm | "$(Agent.OS)" | package-lock.json'
+          path: $(npm_config_cache)
+        displayName: Cache NPM
+
+      - script: npm install -g @angular/cli
+        displayName: NPM Install Angular CLI
+
+      - script: |
+          ng build --project aggiemap-angular --prod
+        displayName: 'Build Aggiemap'
+
+      - task: CopyFiles@2
         inputs:
-          script: 'docker logs mssql'
-      - script: 
-         npm install
-        displayName: 'npm install'
-      - task: CmdLine@2
-        displayName: 'npm install mssql'
-        inputs:
-          script: 'npm install mssql'
-          workingDirectory: '$(build.sourcesdirectory)'
-      - task: CmdLine@2
-        displayName: 'docker list'
-        inputs:
-          script: 'docker ps -all'
-      - task: CmdLine@2
-        displayName: 'Create test database'
+          Contents: 'dist/**' # Pull the build directory (React)
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        displayName: 'Copy Distribution Files'
+
+      - task: PublishBuildArtifacts@1
         inputs: 
-          script: 'sqlcmd -S localhost -d master -U sa -P "yourStrong(!)Password" -Q "CREATE DATABASE test"'
+          pathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
+          ArtifactName: 'www' # output artifact named www
+        displayName: 'Publish Artifacts'
+
+
       - task: DownloadSecureFile@1
         name: ormConfig
         displayName: 'Download ormconfig.ts'
@@ -74,7 +55,3 @@ jobs:
           SourceFolder: $(Agent.TempDirectory)
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/covid/data-api/src/lib
-      
-      - script: npx nx affected --target=test --base=origin/development --parallel
-      - script: npx nx affected --target=lint --base=origin/development --parallel
-      - script: npx nx affected --target=build --base=origin/development --prod --parallel
