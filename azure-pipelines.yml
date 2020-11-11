@@ -42,8 +42,8 @@ jobs:
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
       - task: DownloadSecureFile@1
-        name: oidcproviderconfig
-        displayName: 'Download ormconfig.ts'
+        name: oidc-provider-config
+        displayName: 'Download oidc-provider-config'
         inputs:
           secureFile: 'oidc-provider-config.ts'
       - task: CopyFiles@2
@@ -52,6 +52,7 @@ jobs:
           SourceFolder: $(Agent.TempDirectory)
           Contents: oidc-provider-config.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
+         
 
       - script: |
           npx nx build oidc-provider-nest
