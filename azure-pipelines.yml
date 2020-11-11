@@ -44,15 +44,15 @@ jobs:
         inputs:
           secureFile: 'oidc-provider-config.ts'
       - task: CopyFiles@2
-        displayName: 'Copy ormconfig'
+        displayName: 'Copy oidc-provider-config'
         inputs:
           SourceFolder: $(Agent.TempDirectory)
           Contents: oidc-provider-config.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
 
       - script: |
-          ng build --project aggiemap-angular --prod
-        displayName: 'Build Aggiemap'
+          nx build oidc-provider-nest
+        displayName: 'Build OIDC-Provider-Nest'
 
       - task: CopyFiles@2
         inputs:
