@@ -42,7 +42,6 @@ jobs:
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
       - task: DownloadSecureFile@1
-        name: oidc-provider-config
         displayName: 'Download oidc-provider-config'
         inputs:
           secureFile: 'oidc-provider-config.ts'
