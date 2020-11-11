@@ -54,7 +54,7 @@ jobs:
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
 
       - script: |
-          nx build oidc-provider-nest
+          npx nx build oidc-provider-nest
         displayName: 'Build OIDC-Provider-Nest'
 
       - task: CopyFiles@2
