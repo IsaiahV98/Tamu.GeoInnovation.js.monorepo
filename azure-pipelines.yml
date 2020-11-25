@@ -57,6 +57,9 @@ jobs:
           npx nx build oidc-provider-nest
         displayName: 'Build OIDC-Provider-Nest'
 
+      - script: |
+          npx nx build oidc-admin-angular
+        displayName: 'Build OIDC-Admin-Angular'
       - task: CopyFiles@2
         inputs:
           Contents: 'dist/**' # Pull the build directory (React)
