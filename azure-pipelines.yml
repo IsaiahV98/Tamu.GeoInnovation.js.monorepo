@@ -60,6 +60,18 @@ jobs:
       - script: |
           npx nx build oidc-admin-angular
         displayName: 'Build OIDC-Admin-Angular'
+
+      - task: DownloadSecureFile@1
+        displayName: 'Download package.json'
+        inputs:
+          secureFile: 'package.json'
+      - task: CopyFiles@2
+        displayName: 'Copy oidc-provider-config'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)
+          Contents: package.json
+          TargetFolder: $(System.DefaultWorkingDirectory)/dist/apps/oidc-provider-nest
+
       - task: CopyFiles@2
         inputs:
           Contents: 'dist/**' # Pull the build directory (React)
@@ -71,6 +83,5 @@ jobs:
           pathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
           ArtifactName: 'www' # output artifact named www
         displayName: 'Publish Artifacts'
-
 
 
