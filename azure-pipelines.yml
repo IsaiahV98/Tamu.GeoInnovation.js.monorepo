@@ -32,15 +32,32 @@ jobs:
         displayName: 'npm install'
       - task: DownloadSecureFile@1
         name: ormConfig
-        displayName: 'Download ormconfig.ts'
+        displayName: 'Download oidc-provider-nest.zip'
         inputs:
-          secureFile: 'ormconfig.ts'
+          secureFile: 'oidc-provider-nest.zip'
+      - task: ExtractFiles@1
+        inputs:
+          destinationFolder: $(Agent.TempDirectory)
       - task: CopyFiles@2
         displayName: 'Copy ormconfig'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)
+          SourceFolder: $(Agent.TempDirectory)/oid-provider-nest
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
+      - task: DownloadSecureFile@1
+        name: ormConfig
+        displayName: 'Download oidc-admin-nest.zip'
+        inputs:
+          secureFile: 'oidc-admin-nest.zip'
+      - task: ExtractFiles@1
+        inputs:
+          destinationFolder: $(Agent.TempDirectory)
+      - task: CopyFiles@2
+        displayName: 'Copy ormconfig - OIDC Admin Nest'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)/oidc-admin-nest
+          Contents: ormconfig.ts
+          TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
       - task: DownloadSecureFile@1
         displayName: 'Download oidc-provider-config'
         inputs:
@@ -52,7 +69,6 @@ jobs:
           Contents: oidc-provider-config.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
          
-
       - script: |
           npx nx build oidc-provider-nest
         displayName: 'Build OIDC-Provider-Nest'
@@ -60,6 +76,10 @@ jobs:
       - script: |
           npx nx build oidc-admin-angular
         displayName: 'Build OIDC-Admin-Angular'
+
+      - script: |
+          npx nx build oidc-provider-nest
+        displayName: 'Build OIDC-Provider-Nest'
 
       - task: DownloadSecureFile@1
         displayName: 'Download package.json'
