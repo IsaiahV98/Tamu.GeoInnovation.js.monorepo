@@ -39,7 +39,7 @@ jobs:
         inputs:
           archiveFilePatterns: $(Agent.TempDirectory)/oidc-provider-nest.zip
           cleanDestinationFolder: false
-          destinationFolder: $(Agent.TempDirectory)
+          destinationFolder: $(Agent.TempDirectory)/oidc-provider-nest
       - task: CopyFiles@2
         displayName: 'Copy ormconfig'
         inputs:
@@ -55,7 +55,7 @@ jobs:
         inputs:
           archiveFilePatterns: $(Agent.TempDirectory)/oidc-admin-nest.zip
           cleanDestinationFolder: false 
-          destinationFolder: $(Agent.TempDirectory)
+          destinationFolder: $(Agent.TempDirectory)/oidc-admin-nest
       - task: CopyFiles@2
         displayName: 'Copy ormconfig - OIDC Admin Nest'
         inputs:
