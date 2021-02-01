@@ -43,7 +43,7 @@ jobs:
       - task: CopyFiles@2
         displayName: 'Copy ormconfig'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oid-provider-nest
+          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
       - task: DownloadSecureFile@1
