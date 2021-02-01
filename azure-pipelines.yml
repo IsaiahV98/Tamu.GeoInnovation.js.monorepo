@@ -31,7 +31,7 @@ jobs:
          npm install
         displayName: 'npm install'
       - task: DownloadSecureFile@1
-        name: ormConfig
+        name: ormConfigProviderNest
         displayName: 'Download oidc-provider-nest.zip'
         inputs:
           secureFile: 'oidc-provider-nest.zip'
@@ -45,7 +45,7 @@ jobs:
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
       - task: DownloadSecureFile@1
-        name: ormConfig
+        name: ormConfigAdminNest
         displayName: 'Download oidc-admin-nest.zip'
         inputs:
           secureFile: 'oidc-admin-nest.zip'
