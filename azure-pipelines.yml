@@ -74,17 +74,14 @@ jobs:
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
          
       - script: |
-          npx nx build oidc-admin-nest
-        displayName: 'Build OIDC-admin-Nest'
-
-      - script: |
           npx nx build oidc-admin-angular
         displayName: 'Build OIDC-Admin-Angular'
-
       - script: |
           npx nx build oidc-provider-nest
         displayName: 'Build OIDC-Provider-Nest'
-
+      - script: |
+          npx nx build oidc-admin-nest
+        displayName: 'Build OIDC-admin-Nest'
       - task: DownloadSecureFile@1
         displayName: 'Download package.json'
         inputs:
