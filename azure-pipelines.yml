@@ -65,6 +65,16 @@ jobs:
       - task: DownloadSecureFile@1
         displayName: 'Download oidc-provider-config'
         inputs:
+          secureFile: 'ormconfig.ts'
+      - task: CopyFiles@2
+        displayName: 'Copy oidc-provider-config'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)
+          Contents: ormconfig.ts
+          TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
+      - task: DownloadSecureFile@1
+        displayName: 'Download oidc-provider-config'
+        inputs:
           secureFile: 'oidc-provider-config.ts'
       - task: CopyFiles@2
         displayName: 'Copy oidc-provider-config'
