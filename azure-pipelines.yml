@@ -43,7 +43,7 @@ jobs:
       - task: CopyFiles@2
         displayName: 'Copy ormconfig'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest
+          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidc-provider-nest
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
       - task: DownloadSecureFile@1
@@ -59,7 +59,7 @@ jobs:
       - task: CopyFiles@2
         displayName: 'Copy ormconfig - OIDC Admin Nest'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-admin-nest
+          SourceFolder: $(Agent.TempDirectory)/oidc-admin-nest/oidc-admin-nest
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
       - task: DownloadSecureFile@1
