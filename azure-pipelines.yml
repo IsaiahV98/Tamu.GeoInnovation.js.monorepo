@@ -59,8 +59,14 @@ jobs:
       - task: CopyFiles@2
         displayName: 'Copy ormconfig - OIDC Admin Nest'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-admin-nest/oidc-admin-nest
+          SourceFolder: $(Agent.TempDirectory)/oidc-admin-nest/oidc-admin-nest/oidc-admin-nest
           Contents: ormconfig.ts
+          TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
+      - task: CopyFiles@2
+        displayName: 'Copy oidcconfig - OIDC Admin Nest'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)/oidc-admin-nest/oidc-admin-nest/oidc-admin-nest
+          Contents: oidcconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
       - task: DownloadSecureFile@1
         displayName: 'Download oidc-provider-config'
