@@ -90,13 +90,13 @@ jobs:
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
          
       - script: |
-          npx nx build oidc-admin-angular
+          npx nx build oidc-admin-angular --prod
         displayName: 'Build OIDC-Admin-Angular'
       - script: |
-          npx nx build oidc-provider-nest
+          npx nx build oidc-provider-nest --prod
         displayName: 'Build OIDC-Provider-Nest'
       - script: |
-          npx nx build oidc-admin-nest
+          npx nx build oidc-admin-nest --prod
         displayName: 'Build OIDC-admin-Nest'
       - task: DownloadSecureFile@1
         displayName: 'Download package.json'
@@ -108,13 +108,17 @@ jobs:
           SourceFolder: $(Agent.TempDirectory)
           Contents: package.json
           TargetFolder: $(System.DefaultWorkingDirectory)/dist/apps/oidc-provider-nest
-
+      - task: CopyFiles@2
+        displayName: 'Copy oidc-provider-config'
+        inputs:
+          SourceFolder: $(Agent.TempDirectory)
+          Contents: package.json
+          TargetFolder: $(System.DefaultWorkingDirectory)/dist/apps/oidc-admin-nest
       - task: CopyFiles@2
         inputs:
           Contents: 'dist/**' # Pull the build directory (React)
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
         displayName: 'Copy Distribution Files'
-
       - task: PublishBuildArtifacts@1
         inputs: 
           pathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
