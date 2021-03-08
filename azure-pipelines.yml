@@ -39,29 +39,29 @@ jobs:
         inputs:
           archiveFilePatterns: $(Agent.TempDirectory)/oidcenv.zip
           cleanDestinationFolder: false
-          destinationFolder: $(Agent.TempDirectory)/oidc-provider-nest
+          destinationFolder: $(Agent.TempDirectory)
       - task: CopyFiles@2
         displayName: 'Copying ormconfig to Provider'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidcenv
+          SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
       - task: CopyFiles@2
         displayName: 'Copying ormconfig to Admin'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidcenv
+          SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
       - task: CopyFiles@2
         displayName: 'Copying oidcconfig to Admin'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidcenv
+          SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: oidcconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
       - task: CopyFiles@2
         displayName: 'Copy oidcconfig to Provider'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidcenv
+          SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: oidcconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
          
@@ -77,13 +77,13 @@ jobs:
       - task: CopyFiles@2
         displayName: 'Copy package.json for admin'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidcenv
+          SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: package.json
           TargetFolder: $(System.DefaultWorkingDirectory)/dist/apps/oidc-admin-nest
       - task: CopyFiles@2
         displayName: 'Copy package.json for provider'
         inputs:
-          SourceFolder: $(Agent.TempDirectory)/oidc-provider-nest/oidcenv
+          SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: package.json
           TargetFolder: $(System.DefaultWorkingDirectory)/dist/apps/oidc-provider-nest
       - task: CopyFiles@2
