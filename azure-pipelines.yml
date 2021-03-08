@@ -62,7 +62,7 @@ jobs:
         displayName: 'Copy oidcconfig to Provider'
         inputs:
           SourceFolder: $(Agent.TempDirectory)/oidcenv
-          Contents: oidcconfig.ts
+          Contents: oidc-provider-config.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
          
       - script: |
