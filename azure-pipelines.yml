@@ -39,7 +39,7 @@ jobs:
         inputs:
           archiveFilePatterns: $(Agent.TempDirectory)/oidcenv.zip
           cleanDestinationFolder: false
-          destinationFolder: $(Agent.TempDirectory)
+          destinationFolder: $(Agent.TempDirectory)/oidcenv
       - task: CopyFiles@2
         displayName: 'Copying ormconfig to Provider'
         inputs:
