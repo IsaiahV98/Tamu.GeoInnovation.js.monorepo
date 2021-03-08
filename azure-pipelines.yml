@@ -31,13 +31,13 @@ jobs:
          npm install
         displayName: 'npm install'
       - task: DownloadSecureFile@1
-        name: oidcenv
+        name: oidcenv.zip
         displayName: 'Download oidcenv'
         inputs:
           secureFile: 'oidcenv.zip'
       - task: ExtractFiles@1
         inputs:
-          archiveFilePatterns: $(Agent.TempDirectory)/oidcenv
+          archiveFilePatterns: $(Agent.TempDirectory)/oidcenv.zip
           cleanDestinationFolder: false
           destinationFolder: $(Agent.TempDirectory)/oidc-provider-nest
       - task: CopyFiles@2
