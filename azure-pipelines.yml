@@ -12,18 +12,17 @@ jobs:
         inputs:
           versionSpec: '12.18'
         displayName: 'Install Node.js'
-#      - task: Cache@2
-#        inputs:
-#          key: 'npm | "$(Agent.OS)" | package-lock.json'
-#          restoreKeys: 'npm | "$(Agent.OS)" | package-lock.json'
-#          path: $(npm_config_cache)
-#        displayName: Cache NPM
+      #      - task: Cache@2
+      #        inputs:
+      #          key: 'npm | "$(Agent.OS)" | package-lock.json'
+      #          restoreKeys: 'npm | "$(Agent.OS)" | package-lock.json'
+      #          path: $(npm_config_cache)
+      #        displayName: Cache NPM
 
-#      - script: npm install -g @angular/cli
-#        displayName: NPM Install Angular CLI
+      #      - script: npm install -g @angular/cli
+      #        displayName: NPM Install Angular CLI
 
-      - script: 
-         npm install
+      - script: npm install
         displayName: 'npm install'
       - task: DownloadSecureFile@1
         name: oidcenv
@@ -59,7 +58,7 @@ jobs:
           SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: oidc-provider-config.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
-         
+
       - script: |
           npx nx run oidc-admin-angular:build --prod --baseHref /admin/
         displayName: 'Build OIDC-Admin-Angular'
@@ -87,7 +86,7 @@ jobs:
           TargetFolder: '$(Build.ArtifactStagingDirectory)'
         displayName: 'Copy Distribution Files'
       - task: PublishBuildArtifacts@1
-        inputs: 
+        inputs:
           pathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
           ArtifactName: 'www' # output artifact named www
         displayName: 'Publish Artifacts'
