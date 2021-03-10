@@ -66,7 +66,7 @@ jobs:
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
          
       - script: |
-          npx nx build oidc-admin-angular --prod
+          npx nx run oidc-admin-angular --prod --baseHref=/admin/
         displayName: 'Build OIDC-Admin-Angular'
       - script: |
           npx nx build oidc-provider-nest --prod
