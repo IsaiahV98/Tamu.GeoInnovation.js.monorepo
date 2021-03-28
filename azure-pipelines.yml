@@ -1,86 +1,74 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 pool:
   vmImage: 'windows-latest'
 
 jobs:
-  - job: initialSetup
-    displayName: "Installing SSH, Node.js, and NPM"
+  - job: CdForOIDCProviderNest
     steps:
       - task: InstallSSHKey@0
         inputs:
           knownHostsEntry: 'github.com,140.82.112.3 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
           sshKeySecureFile: 'id_rsa'
-        displayName: 'Install SSH'
-
       - task: NodeTool@0
         inputs:
           versionSpec: '12.18'
         displayName: 'Install Node.js'
+#      - task: Cache@2
+#        inputs:
+#          key: 'npm | "$(Agent.OS)" | package-lock.json'
+#          restoreKeys: 'npm | "$(Agent.OS)" | package-lock.json'
+#          path: $(npm_config_cache)
+#        displayName: Cache NPM
+
+#      - script: npm install -g @angular/cli
+#        displayName: NPM Install Angular CLI
 
       - script: 
          npm install
-        displayName: 'Install NPM'
-
-  - job: buildOIDC
-    displayName: "OIDC prep and build"
-    steps:  
+        displayName: 'npm install'
       - task: DownloadSecureFile@1
         name: oidcenv
+        displayName: 'Download oidcenv'
         inputs:
           secureFile: 'oidcenv.zip'
-        displayName: 'Download oidcenv'
-
       - task: ExtractFiles@1
         inputs:
           archiveFilePatterns: $(Agent.TempDirectory)/oidcenv.zip
           cleanDestinationFolder: false
           destinationFolder: $(Agent.TempDirectory)/oidcenv
-
       - task: CopyFiles@2
+        displayName: 'Copying ormconfig to Provider'
         inputs:
           SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-provider-nest/src/environments
-        displayName: 'Copying ormconfig to Provider'
-
       - task: CopyFiles@2
+        displayName: 'Copying ormconfig to Admin'
         inputs:
           SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: ormconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
-        displayName: 'Copying ormconfig to Admin'
-  
       - task: CopyFiles@2
+        displayName: 'Copying oidcconfig to Admin'
         inputs:
           SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: oidcconfig.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/apps/oidc-admin-nest/src/environments
-        displayName: 'Copying oidcconfig to Admin'
-
       - task: CopyFiles@2
+        displayName: 'Copy oidcconfig to Provider'
         inputs:
           SourceFolder: $(Agent.TempDirectory)/oidcenv
           Contents: oidc-provider-config.ts
           TargetFolder: $(System.DefaultWorkingDirectory)/libs/oidc/provider-nestjs/src/lib/configs
-        displayName: 'Copy oidcconfig to Provider'
-
          
       - script: |
           npx nx run oidc-admin-angular:build --prod --baseHref /admin/
         displayName: 'Build OIDC-Admin-Angular'
-
       - script: |
           npx nx build oidc-provider-nest --prod
         displayName: 'Build OIDC-Provider-Nest'
-
       - script: |
           npx nx build oidc-admin-nest --prod
         displayName: 'Build OIDC-admin-Nest'
-
       - task: CopyFiles@2
         displayName: 'Copy package.json for admin'
         inputs:
