@@ -2,7 +2,7 @@ pool:
   vmImage: 'windows-latest'
 
 jobs:
-  - job: CdForOIDCProviderNest
+  - job: CdForUESeffluentAngular
     steps:
       - task: InstallSSHKey@0
         inputs:
@@ -24,7 +24,7 @@ jobs:
 
       - script: |
           npx nx run ues-effluent-angular:build --prod --baseHref /effluent/
-        displayName: 'Build OIDC-Admin-Angular'
+        displayName: 'Build ues-effluent-angular'
 
       - task: CopyFiles@2
         inputs:
