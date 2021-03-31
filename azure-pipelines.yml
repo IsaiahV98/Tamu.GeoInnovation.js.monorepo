@@ -12,15 +12,10 @@ jobs:
         inputs:
           versionSpec: '12.18'
         displayName: 'Install Node.js'
-      - task: Cache@2
-        inputs:
-          key: 'npm | "$(Agent.OS)" | package-lock.json'
-          restoreKeys: 'npm | "$(Agent.OS)" | package-lock.json'
-          path: $(npm_config_cache)
-        displayName: Cache NPM
 
-      - script: npm install -g @angular/cli
-        displayName: NPM Install Angular CLI
+      - script: 
+          npm install
+        displayName: 'npm install'
 
       - script: |
           npx nx run ues-effluent-angular:build --prod --baseHref /effluent/
